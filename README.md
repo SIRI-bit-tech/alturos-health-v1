@@ -194,26 +194,12 @@ alturos-health/
 4. Add tests if applicable
 5. Submit a pull request
 
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
 ## 🆘 Support
 
 For support and questions:
 - Create an issue in the repository
 - Contact the development team
 - Check the documentation
-
-## 🔄 Recent Updates
-
-- ✅ Removed all mock data from frontend
-- ✅ Implemented real-time API integrations
-- ✅ Fixed Django admin configuration
-- ✅ Added comprehensive admin interfaces
-- ✅ Implemented real notification system
-- ✅ Added real appointment management
-- ✅ Integrated real user authentication
 
 ---
 
