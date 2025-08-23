@@ -90,6 +90,9 @@ export default function HomePage() {
               <Button variant="outline" size="sm" className="min-h-[44px] px-6 bg-transparent" onClick={handlePatientPortal}>
                 Patient Portal
               </Button>
+              <Button variant="outline" size="sm" className="min-h-[44px] px-6 bg-transparent" onClick={() => router.push('/auth/register')}>
+                Register
+              </Button>
               <Button size="sm" className="min-h-[44px] px-6" onClick={handleBookNow}>
                 Book Now
               </Button>
