@@ -1,9 +1,10 @@
 "use client"
 
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
 import {
   Calendar,
   Clock,
@@ -20,10 +21,47 @@ import {
   ArrowRight,
   Play,
 } from "lucide-react"
-import { useState } from "react"
+import { useRouter } from "next/navigation"
 
 export default function HomePage() {
   const [isBookingOpen, setIsBookingOpen] = useState(false)
+  const router = useRouter()
+
+  const handlePatientPortal = () => {
+    // Check if user is logged in, if not redirect to login
+    const token = localStorage.getItem('access_token')
+    if (token) {
+      router.push('/dashboard')
+    } else {
+      router.push('/auth/login')
+    }
+  }
+
+  const handleBookNow = () => {
+    setIsBookingOpen(true)
+  }
+
+  const handleConfirmAppointment = () => {
+    // Check if user is logged in
+    const token = localStorage.getItem('access_token')
+    if (token) {
+      router.push('/book')
+    } else {
+      router.push('/auth/login?redirect=/book')
+    }
+  }
+
+  const handleEmergencyCall = () => {
+    window.location.href = 'tel:555-911-HELP'
+  }
+
+  const handleFindDoctors = () => {
+    router.push('/doctors')
+  }
+
+  const handleLocations = () => {
+    router.push('/locations')
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#F4F3EC] via-[#D2CDB9] to-[#92A378]">
@@ -42,20 +80,17 @@ export default function HomePage() {
                 <p className="text-xs text-muted-foreground">Trusted Healthcare Platform</p>
               </div>
             </div>
-            <nav className="hidden md:flex items-center space-x-8">
-              <a href="#services" className="text-foreground hover:text-primary transition-colors font-medium">
+            <nav className="hidden md:flex items-center gap-8">
+              <a href="#services" className="text-foreground hover:text-primary transition-colors font-medium" onClick={handleFindDoctors}>
                 Services
               </a>
-              <a href="#doctors" className="text-foreground hover:text-primary transition-colors font-medium">
-                Find Doctors
-              </a>
-              <a href="#locations" className="text-foreground hover:text-primary transition-colors font-medium">
+              <a href="#locations" className="text-foreground hover:text-primary transition-colors font-medium" onClick={handleLocations}>
                 Locations
               </a>
-              <Button variant="outline" size="sm" className="min-h-[44px] px-6 bg-transparent">
+              <Button variant="outline" size="sm" className="min-h-[44px] px-6 bg-transparent" onClick={handlePatientPortal}>
                 Patient Portal
               </Button>
-              <Button size="sm" className="min-h-[44px] px-6" onClick={() => setIsBookingOpen(true)}>
+              <Button size="sm" className="min-h-[44px] px-6" onClick={handleBookNow}>
                 Book Now
               </Button>
             </nav>
@@ -98,7 +133,7 @@ export default function HomePage() {
             <Button
               size="lg"
               className="text-lg px-10 py-8 min-h-[56px] shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
-              onClick={() => setIsBookingOpen(true)}
+              onClick={handleConfirmAppointment}
             >
               <Calendar className="w-6 h-6 mr-3" />
               Book Appointment Now
@@ -108,6 +143,7 @@ export default function HomePage() {
               variant="outline"
               size="lg"
               className="text-lg px-10 py-8 min-h-[56px] bg-white/80 backdrop-blur-sm border-2 hover:bg-white transition-all duration-300"
+              onClick={handleEmergencyCall}
             >
               <Phone className="w-6 h-6 mr-3" />
               Emergency: (555) 911-HELP
@@ -181,7 +217,7 @@ export default function HomePage() {
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                  <Button className="flex-1 min-h-[56px] text-lg font-medium" size="lg">
+                  <Button className="flex-1 min-h-[56px] text-lg font-medium" size="lg" onClick={handleConfirmAppointment}>
                     <Calendar className="w-5 h-5 mr-2" />
                     Confirm Appointment
                   </Button>
@@ -294,7 +330,7 @@ export default function HomePage() {
                 <p className="text-lg text-muted-foreground mb-6">
                   Access your complete medical history, test results, and communicate with your healthcare team.
                 </p>
-                <Button className="w-full min-h-[48px] text-lg">
+                <Button className="w-full min-h-[48px] text-lg" onClick={handlePatientPortal}>
                   <Play className="w-5 h-5 mr-2" />
                   Take a Tour
                 </Button>
@@ -314,7 +350,7 @@ export default function HomePage() {
                 Join thousands of patients who trust Alturos Health for their medical care.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button variant="secondary" size="lg" className="text-lg px-8 py-6">
+                <Button variant="secondary" size="lg" className="text-lg px-8 py-6" onClick={handlePatientPortal}>
                   <Users className="w-5 h-5 mr-2" />
                   Patient Portal
                 </Button>
@@ -322,6 +358,7 @@ export default function HomePage() {
                   variant="outline"
                   size="lg"
                   className="text-lg px-8 py-6 bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+                  onClick={handleFindDoctors}
                 >
                   Learn More
                 </Button>
@@ -353,11 +390,11 @@ export default function HomePage() {
             <div>
               <h5 className="font-semibold mb-4 font-[family-name:var(--font-heading)] text-lg">Services</h5>
               <ul className="space-y-3 text-primary-foreground/80">
-                <li className="hover:text-primary-foreground transition-colors cursor-pointer">
+                <li className="hover:text-primary-foreground transition-colors cursor-pointer" onClick={handleFindDoctors}>
                   Telehealth Consultations
                 </li>
-                <li className="hover:text-primary-foreground transition-colors cursor-pointer">Appointment Booking</li>
-                <li className="hover:text-primary-foreground transition-colors cursor-pointer">Patient Portal</li>
+                <li className="hover:text-primary-foreground transition-colors cursor-pointer" onClick={handleBookNow}>Appointment Booking</li>
+                <li className="hover:text-primary-foreground transition-colors cursor-pointer" onClick={handlePatientPortal}>Patient Portal</li>
                 <li className="hover:text-primary-foreground transition-colors cursor-pointer">
                   Insurance Verification
                 </li>

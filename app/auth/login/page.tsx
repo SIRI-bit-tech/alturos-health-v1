@@ -1,170 +1,146 @@
 "use client"
 
-import type React from "react"
-import { useState } from "react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Eye, EyeOff, Heart, Shield, Users } from "lucide-react"
-import { useAuth } from "@/hooks/use-auth"
-import { useRouter } from "next/navigation"
+import { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Heart, Eye, EyeOff } from 'lucide-react'
+import { useAuth } from '@/contexts/AuthContext'
+import { useRouter, useSearchParams } from 'next/navigation'
+import Link from 'next/link'
 
 export default function LoginPage() {
-  const [formData, setFormData] = useState({
-    username: "",
-    password: "",
-  })
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
-  const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
-  const { login, isLoading: authLoading } = useAuth()
+  const [error, setError] = useState('')
+  
+  const { login } = useAuth()
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirect = searchParams.get('redirect') || '/dashboard'
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
-    setError("")
+    setError('')
 
-    const result = await login(formData)
-
-    if (result.success) {
-      router.push("/dashboard")
-    } else {
-      setError(result.error || "Login failed")
+    try {
+      const success = await login(username, password)
+      if (success) {
+        router.push(redirect)
+      } else {
+        setError('Invalid username or password')
+      }
+    } catch (err) {
+      setError('An error occurred during login')
+    } finally {
+      setIsLoading(false)
     }
-
-    setIsLoading(false)
-  }
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }))
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-healthcare-cream via-healthcare-sage to-healthcare-forest flex items-center justify-center p-4">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-20 left-20 w-32 h-32 bg-healthcare-forest rounded-full blur-xl"></div>
-        <div className="absolute bottom-20 right-20 w-40 h-40 bg-healthcare-sage rounded-full blur-xl"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-60 h-60 bg-healthcare-cream rounded-full blur-2xl"></div>
-      </div>
-
-      <div className="w-full max-w-md relative z-10">
-        {/* Header */}
+    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5 flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        {/* Logo */}
         <div className="text-center mb-8">
-          <div className="flex items-center justify-center mb-4">
-            <div className="bg-white/20 backdrop-blur-sm p-3 rounded-2xl">
-              <Heart className="h-8 w-8 text-healthcare-forest" />
-            </div>
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-primary rounded-full mb-4">
+            <Heart className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-healthcare-forest mb-2">Welcome Back</h1>
-          <p className="text-healthcare-forest/70">Sign in to your Alturos Health account</p>
+          <h1 className="text-2xl font-bold text-foreground">Alturos Health</h1>
+          <p className="text-muted-foreground">Sign in to your account</p>
         </div>
 
-        <Card className="bg-white/95 backdrop-blur-sm border-0 shadow-2xl">
-          <CardHeader className="space-y-1 pb-6">
-            <CardTitle className="text-2xl font-semibold text-center text-healthcare-forest">Sign In</CardTitle>
-            <CardDescription className="text-center text-healthcare-forest/60">
+        {/* Login Form */}
+        <Card className="border-0 shadow-2xl bg-white/90 backdrop-blur-sm">
+          <CardHeader className="text-center pb-6">
+            <CardTitle className="text-2xl font-bold text-foreground">
+              Welcome Back
+            </CardTitle>
+            <CardDescription className="text-muted-foreground">
               Enter your credentials to access your account
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {error && (
-                <Alert className="border-red-200 bg-red-50">
-                  <AlertDescription className="text-red-700">{error}</AlertDescription>
-                </Alert>
-              )}
-
+          
+          <CardContent className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="username" className="text-healthcare-forest font-medium">
+                <Label htmlFor="username" className="text-sm font-medium text-foreground">
                   Username or Email
                 </Label>
                 <Input
                   id="username"
-                  name="username"
                   type="text"
-                  required
-                  value={formData.username}
-                  onChange={handleChange}
-                  className="h-12 border-healthcare-sage/30 focus:border-healthcare-forest focus:ring-healthcare-forest/20"
                   placeholder="Enter your username or email"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  required
+                  className="min-h-[48px] text-base"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-healthcare-forest font-medium">
+                <Label htmlFor="password" className="text-sm font-medium text-foreground">
                   Password
                 </Label>
                 <div className="relative">
                   <Input
                     id="password"
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    required
-                    value={formData.password}
-                    onChange={handleChange}
-                    className="h-12 pr-12 border-healthcare-sage/30 focus:border-healthcare-forest focus:ring-healthcare-forest/20"
+                    type={showPassword ? 'text' : 'password'}
                     placeholder="Enter your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    className="min-h-[48px] text-base pr-12"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-healthcare-forest/60 hover:text-healthcare-forest"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
                   >
-                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between">
-                <Link
-                  href="/auth/forgot-password"
-                  className="text-sm text-healthcare-forest hover:text-healthcare-forest/80 font-medium"
-                >
-                  Forgot password?
-                </Link>
-              </div>
+              {error && (
+                <div className="text-sm text-destructive bg-destructive/10 p-3 rounded-lg">
+                  {error}
+                </div>
+              )}
 
               <Button
                 type="submit"
-                disabled={isLoading || authLoading}
-                className="w-full h-12 bg-healthcare-forest hover:bg-healthcare-forest/90 text-white font-semibold rounded-lg transition-all duration-200 transform hover:scale-[1.02]"
+                className="w-full min-h-[48px] text-base font-medium"
+                disabled={isLoading}
               >
-                {isLoading || authLoading ? "Signing in..." : "Sign In"}
+                {isLoading ? 'Signing in...' : 'Sign In'}
               </Button>
             </form>
 
-            <div className="mt-6 text-center">
-              <p className="text-healthcare-forest/60">
-                Don't have an account?{" "}
-                <Link
-                  href="/auth/register"
-                  className="text-healthcare-forest font-semibold hover:text-healthcare-forest/80"
-                >
+            <div className="text-center space-y-4">
+              <div className="text-sm text-muted-foreground">
+                Don't have an account?{' '}
+                <Link href="/auth/register" className="text-primary hover:underline font-medium">
                   Sign up
                 </Link>
-              </p>
+              </div>
+              
+              <div className="text-sm text-muted-foreground">
+                <Link href="/auth/forgot-password" className="text-primary hover:underline">
+                  Forgot your password?
+                </Link>
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Trust Indicators */}
-        <div className="mt-8 flex items-center justify-center space-x-8 text-healthcare-forest/60">
-          <div className="flex items-center space-x-2">
-            <Shield className="h-4 w-4" />
-            <span className="text-sm">HIPAA Compliant</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Users className="h-4 w-4" />
-            <span className="text-sm">Trusted by 10k+ patients</span>
-          </div>
+        {/* Footer */}
+        <div className="text-center mt-8 text-sm text-muted-foreground">
+          <p>© 2024 Alturos Health. All rights reserved.</p>
+          <p className="mt-1">HIPAA Compliant Healthcare Platform</p>
         </div>
       </div>
     </div>
