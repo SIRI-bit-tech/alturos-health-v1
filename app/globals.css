@@ -1,0 +1,125 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --background: #f4f3ec; /* Light beige */
+  --foreground: #2d5016; /* Forest Green */
+  --card: #f9f9f9; /* Light gray for cards */
+  --card-foreground: #374151; /* Dark gray for text on cards */
+  --popover: #ffffff; /* White for popover backgrounds */
+  --popover-foreground: #2d5016; /* Dark green for popover text */
+  --primary: #2d5016; /* Forest Green for primary actions */
+  --primary-foreground: #ffffff; /* White text on primary buttons */
+  --secondary: #d2cdb9; /* Soft taupe for secondary elements */
+  --secondary-foreground: #374151; /* Dark gray for secondary text */
+  --muted: #e0e0e0; /* Gray for muted items */
+  --muted-foreground: #374151; /* Dark gray for muted text */
+  --accent: #92a378; /* Muted green for accent elements */
+  --accent-foreground: #ffffff; /* White text on accent elements */
+  --destructive: #ff4d4d; /* Red for destructive actions */
+  --destructive-foreground: #ffffff; /* White text on destructive buttons */
+  --border: #e0e0e0; /* Gray for borders */
+  --input: #ffffff; /* White for input fields */
+  --ring: rgba(45, 80, 22, 0.5); /* Semi-transparent forest green for focus rings */
+  --chart-1: #a0d6d5; /* Light teal for charts */
+  --chart-2: #c3e5c8; /* Light green for charts */
+  --chart-3: #e5f3e0; /* Very light green for charts */
+  --chart-4: #f0f9f5; /* Softest green for charts */
+  --chart-5: #f4f3ec; /* Light beige for charts */
+  --radius: 0.5rem; /* Rounded corners */
+  --sidebar: #ffffff; /* White for sidebar */
+  --sidebar-foreground: #2d5016; /* Forest Green for sidebar text */
+  --sidebar-primary: #f4f3ec; /* Light beige for active sidebar items */
+  --sidebar-primary-foreground: #2d5016; /* Dark green for active sidebar text */
+  --sidebar-accent: #d2cdb9; /* Soft taupe for accent sidebar items */
+  --sidebar-accent-foreground: #374151; /* Dark gray for accent sidebar text */
+  --sidebar-border: #e0e0e0; /* Gray for sidebar borders */
+  --sidebar-ring: rgba(45, 80, 22, 0.5); /* Semi-transparent forest green for sidebar focus */
+}
+
+.dark {
+  --background: #1a1a1a; /* Dark background */
+  --foreground: #f4f3ec; /* Light beige for text */
+  --card: #2a2a2a; /* Dark gray for cards */
+  --card-foreground: #f4f3ec; /* Light beige for card text */
+  --popover: #2a2a2a; /* Dark gray for popover backgrounds */
+  --popover-foreground: #f4f3ec; /* Light beige for popover text */
+  --primary: #92a378; /* Muted green for primary actions in dark mode */
+  --primary-foreground: #ffffff; /* White text on primary buttons */
+  --secondary: #3a3a3a; /* Darker gray for secondary elements */
+  --secondary-foreground: #f4f3ec; /* Light beige for secondary text */
+  --muted: #3a3a3a; /* Darker gray for muted items */
+  --muted-foreground: #a0a0a0; /* Light gray for muted text */
+  --accent: #d2cdb9; /* Soft taupe for accent elements */
+  --accent-foreground: #2d5016; /* Dark green text on accent elements */
+  --destructive: #ff6b6b; /* Lighter red for destructive actions */
+  --destructive-foreground: #ffffff; /* White text on destructive buttons */
+  --border: #3a3a3a; /* Darker gray for borders */
+  --input: #2a2a2a; /* Dark gray for input fields */
+  --ring: rgba(146, 163, 120, 0.5); /* Semi-transparent muted green for focus rings */
+  --chart-1: #6b8e7a; /* Darker teal for charts */
+  --chart-2: #8fa68a; /* Darker green for charts */
+  --chart-3: #a8b8a0; /* Medium green for charts */
+  --chart-4: #c2cdb9; /* Light green for charts */
+  --chart-5: #d2cdb9; /* Soft taupe for charts */
+  --sidebar: #2a2a2a; /* Dark gray for sidebar */
+  --sidebar-foreground: #f4f3ec; /* Light beige for sidebar text */
+  --sidebar-primary: #92a378; /* Muted green for active sidebar items */
+  --sidebar-primary-foreground: #ffffff; /* White for active sidebar text */
+  --sidebar-accent: #3a3a3a; /* Darker gray for accent sidebar items */
+  --sidebar-accent-foreground: #f4f3ec; /* Light beige for accent sidebar text */
+  --sidebar-border: #3a3a3a; /* Darker gray for sidebar borders */
+  --sidebar-ring: rgba(146, 163, 120, 0.5); /* Semi-transparent muted green for sidebar focus */
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+/* Base styles for Tailwind CSS v4 */
+* {
+  border-color: var(--border);
+  outline-color: color-mix(in srgb, var(--ring) 50%, transparent);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+}
