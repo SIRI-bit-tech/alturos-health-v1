@@ -407,13 +407,19 @@ export default function HomePage() {
               </ul>
             </div>
             <div>
-              <h5 className="font-semibold mb-4 font-[family-name:var(--font-heading)] text-lg">Support</h5>
+              <h5 className="font-semibold mb-4 font-[family-name:var(--font-heading)] text-lg">Company</h5>
               <ul className="space-y-3 text-primary-foreground/80">
-                <li className="hover:text-primary-foreground transition-colors cursor-pointer">Help Center</li>
-                <li className="hover:text-primary-foreground transition-colors cursor-pointer">Contact Us</li>
-                <li className="hover:text-primary-foreground transition-colors cursor-pointer">Privacy Policy</li>
-                <li className="hover:text-primary-foreground transition-colors cursor-pointer">Terms of Service</li>
-                <li className="hover:text-primary-foreground transition-colors cursor-pointer">HIPAA Notice</li>
+                <li className="hover:text-primary-foreground transition-colors cursor-pointer" onClick={() => router.push('/about')}>About Us</li>
+                <li className="hover:text-primary-foreground transition-colors cursor-pointer" onClick={() => router.push('/help')}>Help Center</li>
+                <li className="hover:text-primary-foreground transition-colors cursor-pointer" onClick={() => router.push('/contact')}>Contact Us</li>
+              </ul>
+            </div>
+            <div>
+              <h5 className="font-semibold mb-4 font-[family-name:var(--font-heading)] text-lg">Legal</h5>
+              <ul className="space-y-3 text-primary-foreground/80">
+                <li className="hover:text-primary-foreground transition-colors cursor-pointer" onClick={() => router.push('/privacy')}>Privacy Policy</li>
+                <li className="hover:text-primary-foreground transition-colors cursor-pointer" onClick={() => router.push('/terms')}>Terms of Service</li>
+                <li className="hover:text-primary-foreground transition-colors cursor-pointer" onClick={() => router.push('/hipaa')}>HIPAA Notice</li>
               </ul>
             </div>
             <div>
