@@ -19,11 +19,13 @@ import {
   ChevronUp,
 } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { useAuth } from "@/hooks/use-auth"
 
 export default function HelpPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [expandedSections, setExpandedSections] = useState<{ [key: string]: boolean }>({})
   const router = useRouter()
+  const { isAuthenticated } = useAuth()
 
   const toggleSection = (section: string) => {
     setExpandedSections(prev => ({
@@ -143,7 +145,7 @@ export default function HelpPage() {
                 <p className="text-xs text-muted-foreground">We're here to help you</p>
               </div>
             </div>
-            <Button variant="outline" size="sm" onClick={() => router.push('/')}>
+            <Button variant="outline" size="sm" onClick={() => router.push(isAuthenticated ? '/dashboard' : '/')}> 
               Back to Home
             </Button>
           </div>
@@ -274,7 +276,7 @@ export default function HelpPage() {
                   variant="outline"
                   size="lg"
                   className="text-lg px-8 py-6 bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
-                  onClick={() => router.push('/')}
+                  onClick={() => router.push(isAuthenticated ? '/dashboard' : '/')}
                 >
                   Back to Home
                 </Button>

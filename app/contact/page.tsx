@@ -19,6 +19,7 @@ import {
   Calendar,
 } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { useAuth } from "@/hooks/use-auth"
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -29,6 +30,7 @@ export default function ContactPage() {
     message: ""
   })
   const router = useRouter()
+  const { isAuthenticated } = useAuth()
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -70,7 +72,7 @@ export default function ContactPage() {
       title: "Hours",
       details: ["Mon-Fri: 8:00 AM - 6:00 PM", "Sat: 9:00 AM - 2:00 PM", "Sun: Emergency Only"],
       action: "Book Appointment",
-      onClick: () => router.push('/')
+      onClick: () => router.push(isAuthenticated ? '/dashboard' : '/')
     }
   ]
 
@@ -114,7 +116,7 @@ export default function ContactPage() {
                 <p className="text-xs text-muted-foreground">Get in touch with our team</p>
               </div>
             </div>
-            <Button variant="outline" size="sm" onClick={() => router.push('/')}>
+            <Button variant="outline" size="sm" onClick={() => router.push(isAuthenticated ? '/dashboard' : '/')}> 
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Home
             </Button>
@@ -305,7 +307,7 @@ export default function ContactPage() {
                   variant="outline"
                   size="lg"
                   className="text-lg px-8 py-6 bg-transparent border-white text-white hover:bg-white hover:text-red-600"
-                  onClick={() => router.push('/')}
+                  onClick={() => router.push(isAuthenticated ? '/dashboard' : '/')}
                 >
                   Back to Home
                 </Button>

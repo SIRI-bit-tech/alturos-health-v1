@@ -22,6 +22,7 @@ import {
   Star,
 } from "lucide-react"
 import Link from "next/link"
+import { useAuth } from "@/hooks/use-auth"
 
 interface Doctor {
   id: string
@@ -88,6 +89,7 @@ const timeSlots: TimeSlot[] = [
 ]
 
 export default function BookAppointmentPage() {
+  const { isAuthenticated } = useAuth()
   const [currentStep, setCurrentStep] = useState(1)
   const [selectedSpecialty, setSelectedSpecialty] = useState("")
   const [selectedType, setSelectedType] = useState("")
@@ -150,7 +152,7 @@ export default function BookAppointmentPage() {
               </div>
             </Link>
             <Button variant="outline" asChild>
-              <Link href="/">
+              <Link href={isAuthenticated ? "/dashboard" : "/"}>
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Home
               </Link>
@@ -606,7 +608,7 @@ export default function BookAppointmentPage() {
                     <Link href="/dashboard">View in Dashboard</Link>
                   </Button>
                   <Button variant="outline" asChild className="flex-1 min-h-[56px] text-lg bg-transparent">
-                    <Link href="/">Back to Home</Link>
+                    <Link href={isAuthenticated ? "/dashboard" : "/"}>Back to Home</Link>
                   </Button>
                 </div>
               </CardContent>

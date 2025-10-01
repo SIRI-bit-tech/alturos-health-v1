@@ -5,9 +5,11 @@ import { Button } from "@/components/ui/button"
 import { Users, ArrowLeft, HeartPulse, Stethoscope, Award, Globe, Shield, Clock, Target, TrendingUp, CheckCircle, Star } from "lucide-react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
+import { useAuth } from "@/hooks/use-auth"
 
 export default function AboutPage() {
 	const router = useRouter()
+	const { isAuthenticated } = useAuth()
 	
 	const stats = [
 		{ number: "50,000+", label: "Patients Served", icon: Users },
@@ -69,7 +71,7 @@ export default function AboutPage() {
 								<p className="text-xs text-muted-foreground">Our mission, values, and journey</p>
 							</div>
 						</div>
-						<Button variant="outline" size="sm" onClick={() => router.push('/')}> 
+						<Button variant="outline" size="sm" onClick={() => router.push(isAuthenticated ? '/dashboard' : '/')}> 
 							<ArrowLeft className="w-4 h-4 mr-2" />
 							Back to Home
 						</Button>

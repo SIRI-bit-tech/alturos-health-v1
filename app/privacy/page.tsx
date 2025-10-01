@@ -4,9 +4,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Shield, ArrowLeft } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { useAuth } from "@/hooks/use-auth"
 
 export default function PrivacyPolicyPage() {
 	const router = useRouter()
+	const { isAuthenticated } = useAuth()
 
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-[#F4F3EC] via-[#D2CDB9] to-[#92A378]">
@@ -22,7 +24,7 @@ export default function PrivacyPolicyPage() {
 								<p className="text-xs text-muted-foreground">Your privacy is important to us</p>
 							</div>
 						</div>
-						<Button variant="outline" size="sm" onClick={() => router.push('/')}> 
+						<Button variant="outline" size="sm" onClick={() => router.push(isAuthenticated ? '/dashboard' : '/')}> 
 							<ArrowLeft className="w-4 h-4 mr-2" />
 							Back to Home
 						</Button>
