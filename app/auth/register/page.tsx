@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -30,8 +30,14 @@ export default function RegisterPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
-  const { register, isLoading: authLoading } = useAuth()
+  const { register, isLoading: authLoading, isAuthenticated } = useAuth()
   const router = useRouter()
+  // If already authenticated, go to dashboard
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.replace("/dashboard")
+    }
+  }, [isAuthenticated, router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -44,10 +50,15 @@ export default function RegisterPage() {
       return
     }
 
-    const result = await register(formData)
+    const payload = {
+      ...formData,
+      username: formData.username.trim(),
+      email: formData.email.trim(),
+    }
+    const result = await register(payload)
 
     if (result.success) {
-      router.push("/dashboard")
+      router.replace("/dashboard")
     } else {
       setError(result.error || "Registration failed")
     }

@@ -6,7 +6,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Heart, Eye, EyeOff } from 'lucide-react'
-import { useAuth } from '@/contexts/AuthContext'
+import { useAuth } from '@/hooks/use-auth'
+import { useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 
@@ -17,10 +18,17 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   
-  const { login } = useAuth()
+  const { login, isAuthenticated, isLoading: authLoading } = useAuth()
   const router = useRouter()
   const searchParams = useSearchParams()
   const redirect = searchParams.get('redirect') || '/dashboard'
+
+  // If already authenticated, send to dashboard immediately
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.replace(redirect)
+    }
+  }, [isAuthenticated, redirect, router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -28,11 +36,11 @@ export default function LoginPage() {
     setError('')
 
     try {
-      const success = await login(username, password)
-      if (success) {
-        router.push(redirect)
+      const result = await login({ username: username.trim(), password })
+      if (result.success) {
+        router.replace(redirect)
       } else {
-        setError('Invalid username or password')
+        setError(result.error || 'Invalid username or password')
       }
     } catch (err) {
       setError('An error occurred during login')

@@ -77,11 +77,16 @@ export default function PatientDashboard() {
   const [medicalRecords, setMedicalRecords] = useState<MedicalRecord[]>([])
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const { user, profile, logout } = useAuth()
+  const { user, profile, logout, isLoading: authLoading } = useAuth()
   const router = useRouter()
 
   useEffect(() => {
     const fetchData = async () => {
+      // Wait for auth to resolve before deciding to redirect
+      if (authLoading) {
+        return
+      }
+
       if (!user) {
         router.push("/auth/login")
         return
@@ -115,7 +120,7 @@ export default function PatientDashboard() {
     }
 
     fetchData()
-  }, [user, router])
+  }, [user, router, authLoading])
 
   const handleLogout = async () => {
     await logout()
@@ -128,7 +133,7 @@ export default function PatientDashboard() {
 
   const unreadMessages = notifications.filter((notif) => !notif.is_read)
 
-  if (isLoading) {
+  if (isLoading || authLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#F4F3EC] via-[#D2CDB9] to-[#92A378] flex items-center justify-center">
         <div className="flex items-center space-x-2">

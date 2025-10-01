@@ -72,6 +72,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         localStorage.setItem("user", JSON.stringify(data.user))
         localStorage.setItem("access_token", data.access)
         localStorage.setItem("refresh_token", data.refresh)
+        // Mirror token into a cookie so Next.js middleware can read it
+        try {
+          document.cookie = `access_token=${data.access}; Path=/; Max-Age=${60 * 60 * 4}; SameSite=Lax` // 4 hours
+        } catch (_) {
+          // ignore if not in browser
+        }
         return { success: true }
       } else {
         return { success: false, error: error || "Login failed" }
@@ -89,11 +95,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const { data, error } = await authApi.register(userData)
 
       if (data && !error) {
-        setUser(data.user)
-        localStorage.setItem("user", JSON.stringify(data.user))
-        localStorage.setItem("access_token", data.access)
-        localStorage.setItem("refresh_token", data.refresh)
-        return { success: true }
+        // Some backends return tokens on register; others don't. Handle both.
+        const hasTokens = Boolean((data as any).access && (data as any).refresh)
+
+        if (hasTokens) {
+          setUser((data as any).user)
+          localStorage.setItem("user", JSON.stringify((data as any).user))
+          localStorage.setItem("access_token", (data as any).access)
+          localStorage.setItem("refresh_token", (data as any).refresh)
+          return { success: true }
+        }
+
+        // If tokens weren't returned, immediately log the user in
+        const loginResult = await authApi.login({
+          username: userData.username,
+          password: userData.password,
+        })
+
+        if (loginResult.data && !loginResult.error) {
+          setUser((loginResult.data as any).user)
+          localStorage.setItem("user", JSON.stringify((loginResult.data as any).user))
+          localStorage.setItem("access_token", (loginResult.data as any).access)
+          localStorage.setItem("refresh_token", (loginResult.data as any).refresh)
+        try {
+          document.cookie = `access_token=${(loginResult.data as any).access}; Path=/; Max-Age=${60 * 60 * 4}; SameSite=Lax`
+        } catch (_) {}
+          return { success: true }
+        }
+
+        return { success: false, error: loginResult.error || "Auto-login after registration failed" }
       } else {
         return { success: false, error: error || "Registration failed" }
       }
@@ -113,6 +143,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(null)
       setProfile(null)
       removeAuthToken()
+      try {
+        document.cookie = "access_token=; Path=/; Max-Age=0; SameSite=Lax"
+      } catch (_) {}
     }
   }
 

@@ -59,15 +59,37 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 
 class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField()
+    # Accept either username or email from the client
+    username = serializers.CharField(required=False, allow_blank=True)
+    email = serializers.EmailField(required=False, allow_blank=True)
     password = serializers.CharField()
     
     def validate(self, attrs):
-        username = attrs.get('username')
-        password = attrs.get('password')
+        # Prefer explicit username, but allow email too
+        username_or_email = (attrs.get('username') or attrs.get('email') or "").strip()
+        password = (attrs.get('password') or "").strip()
         
-        if username and password:
-            user = authenticate(username=username, password=password)
+        if username_or_email and password:
+            # Try authenticate with username first (case-insensitive)
+            candidate_username = username_or_email
+            try:
+                # Resolve case-insensitive username to the actual stored username
+                user_row = User.objects.filter(username__iexact=candidate_username).only('username').first()
+                if user_row:
+                    candidate_username = user_row.username
+            except Exception:
+                pass
+
+            user = authenticate(username=candidate_username, password=password)
+            
+            # If that failed, try resolving by email
+            if not user and '@' in username_or_email:
+                try:
+                    email_user = User.objects.get(email__iexact=username_or_email)
+                    user = authenticate(username=email_user.username, password=password)
+                except User.DoesNotExist:
+                    user = None
+
             if not user:
                 raise serializers.ValidationError('Invalid credentials')
             if not user.is_active:
