@@ -1,10 +1,16 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import {
   Calendar,
   Clock,
@@ -20,83 +26,125 @@ import {
   UserCheck,
   ArrowRight,
   Play,
-} from "lucide-react"
-import { useRouter } from "next/navigation"
+} from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export default function HomePage() {
-  const [isBookingOpen, setIsBookingOpen] = useState(false)
-  const router = useRouter()
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
+  const router = useRouter();
 
   const handlePatientPortal = () => {
     // Check if user is logged in, if not redirect to login
-    const token = localStorage.getItem('access_token')
+    const token = localStorage.getItem('access_token');
     if (token) {
-      router.push('/dashboard')
+      router.push('/dashboard');
     } else {
-      router.push('/auth/login')
+      router.push('/auth/login');
     }
-  }
+  };
 
   const handleBookNow = () => {
-    setIsBookingOpen(true)
-  }
+    // Check if user is logged in
+    const token = localStorage.getItem('access_token');
+    if (token) {
+      router.push('/book');
+    } else {
+      router.push('/auth/login?redirect=/book');
+    }
+  };
 
   const handleConfirmAppointment = () => {
     // Check if user is logged in
-    const token = localStorage.getItem('access_token')
+    const token = localStorage.getItem('access_token');
     if (token) {
-      router.push('/book')
+      router.push('/book');
     } else {
-      router.push('/auth/login?redirect=/book')
+      router.push('/auth/login?redirect=/book');
     }
-  }
+  };
 
   const handleEmergencyCall = () => {
-    window.location.href = 'tel:555-911-HELP'
-  }
+    window.location.href = 'tel:555-911-HELP';
+  };
 
   const handleFindDoctors = () => {
-    router.push('/doctors')
-  }
+    router.push('/doctors');
+  };
 
   const handleLocations = () => {
-    router.push('/locations')
-  }
+    router.push('/locations');
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#F4F3EC] via-[#D2CDB9] to-[#92A378]">
       {/* Header */}
-      <header className="bg-white/90 backdrop-blur-sm border-b border-border sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg">
-                <Heart className="w-6 h-6 text-primary-foreground" />
+      <header className="bg-white/90 backdrop-blur-sm border-b border-border sticky top-0 z-50 w-full">
+        <div className="container mx-auto px-3 py-2">
+          <div className="flex items-center justify-between w-full">
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-primary rounded-xl flex items-center justify-center shadow-lg">
+                <Heart className="w-5 h-5 text-primary-foreground" />
               </div>
-              <div>
-                <h1 className="text-2xl font-bold text-primary font-[family-name:var(--font-heading)]">
+              <div className="min-w-0">
+                <h1 className="text-lg sm:text-xl font-bold text-primary font-[family-name:var(--font-heading)] truncate">
                   Alturos Health
                 </h1>
-                <p className="text-xs text-muted-foreground">Trusted Healthcare Platform</p>
+                <p className="text-[10px] sm:text-xs text-muted-foreground">
+                  Trusted Healthcare
+                </p>
               </div>
             </div>
-            <nav className="hidden md:flex items-center gap-8">
-              <a href="#services" className="text-foreground hover:text-primary transition-colors font-medium" onClick={handleFindDoctors}>
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center gap-4">
+              <a
+                href="#services"
+                className="text-foreground hover:text-primary transition-colors font-medium text-sm"
+                onClick={handleFindDoctors}
+              >
                 Services
               </a>
-              <a href="#locations" className="text-foreground hover:text-primary transition-colors font-medium" onClick={handleLocations}>
+              <a
+                href="#locations"
+                className="text-foreground hover:text-primary transition-colors font-medium text-sm"
+                onClick={handleLocations}
+              >
                 Locations
               </a>
-              <Button variant="outline" size="sm" className="min-h-[44px] px-6 bg-transparent" onClick={handlePatientPortal}>
-                Patient Portal
-              </Button>
-              <Button variant="outline" size="sm" className="min-h-[44px] px-6 bg-transparent" onClick={() => router.push('/auth/register')}>
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-8 px-3 bg-transparent text-sm"
+                onClick={() => router.push('/auth/register')}
+              >
                 Register
               </Button>
-              <Button size="sm" className="min-h-[44px] px-6" onClick={handleBookNow}>
+              <Button
+                size="sm"
+                className="h-8 px-3 text-sm"
+                onClick={() => router.push('/auth/login?redirect=/book')}
+              >
                 Book Now
               </Button>
             </nav>
+
+            {/* Mobile Navigation */}
+            <div className="flex md:hidden items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-8 px-3 bg-transparent text-sm"
+                onClick={() => router.push('/auth/register')}
+              >
+                Register
+              </Button>
+              <Button
+                size="sm"
+                className="h-8 px-3 text-sm"
+                onClick={() => router.push('/auth/login?redirect=/book')}
+              >
+                Book Now
+              </Button>
+            </div>
           </div>
         </div>
       </header>
@@ -116,7 +164,10 @@ export default function HomePage() {
         </div>
 
         <div className="container mx-auto text-center relative z-10">
-          <Badge variant="secondary" className="mb-6 px-4 py-2 text-sm font-medium">
+          <Badge
+            variant="secondary"
+            className="mb-6 px-4 py-2 text-sm font-medium"
+          >
             <Shield className="w-4 h-4 mr-2" />
             HIPAA Compliant & Secure
           </Badge>
@@ -128,8 +179,9 @@ export default function HomePage() {
           </h2>
 
           <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
-            Experience seamless telehealth and appointment management with our comprehensive platform designed for
-            multi-specialty medical practices. Available 24/7 for your healthcare needs.
+            Experience seamless telehealth and appointment management with our
+            comprehensive platform designed for multi-specialty medical
+            practices. Available 24/7 for your healthcare needs.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-6 justify-center mb-12">
@@ -179,12 +231,16 @@ export default function HomePage() {
                 <CardTitle className="text-2xl font-[family-name:var(--font-heading)] text-primary">
                   Book Your Appointment
                 </CardTitle>
-                <CardDescription className="text-lg">Choose your preferred doctor and appointment time</CardDescription>
+                <CardDescription className="text-lg">
+                  Choose your preferred doctor and appointment time
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-foreground">Specialty</label>
+                    <label className="text-sm font-medium text-foreground">
+                      Specialty
+                    </label>
                     <select className="w-full p-4 border border-border rounded-lg bg-white min-h-[56px] text-lg">
                       <option>General Medicine</option>
                       <option>Cardiology</option>
@@ -194,7 +250,9 @@ export default function HomePage() {
                     </select>
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-foreground">Appointment Type</label>
+                    <label className="text-sm font-medium text-foreground">
+                      Appointment Type
+                    </label>
                     <select className="w-full p-4 border border-border rounded-lg bg-white min-h-[56px] text-lg">
                       <option>In-Person Visit</option>
                       <option>Telehealth Consultation</option>
@@ -206,11 +264,15 @@ export default function HomePage() {
 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-foreground">Preferred Date</label>
+                    <label className="text-sm font-medium text-foreground">
+                      Preferred Date
+                    </label>
                     <Input type="date" className="min-h-[56px] text-lg" />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-foreground">Preferred Time</label>
+                    <label className="text-sm font-medium text-foreground">
+                      Preferred Time
+                    </label>
                     <select className="w-full p-4 border border-border rounded-lg bg-white min-h-[56px] text-lg">
                       <option>Morning (8AM - 12PM)</option>
                       <option>Afternoon (12PM - 5PM)</option>
@@ -220,7 +282,11 @@ export default function HomePage() {
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                  <Button className="flex-1 min-h-[56px] text-lg font-medium" size="lg" onClick={handleConfirmAppointment}>
+                  <Button
+                    className="flex-1 min-h-[56px] text-lg font-medium"
+                    size="lg"
+                    onClick={handleConfirmAppointment}
+                  >
                     <Calendar className="w-5 h-5 mr-2" />
                     Confirm Appointment
                   </Button>
@@ -246,7 +312,8 @@ export default function HomePage() {
               Comprehensive Healthcare Solutions
             </h3>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Everything you need for modern healthcare management in one secure, easy-to-use platform
+              Everything you need for modern healthcare management in one
+              secure, easy-to-use platform
             </p>
           </div>
 
@@ -260,8 +327,9 @@ export default function HomePage() {
                   Smart Appointment Booking
                 </CardTitle>
                 <CardDescription className="text-base leading-relaxed">
-                  Schedule appointments with your preferred doctors across multiple specialties. Auto-generated
-                  appointment IDs for easy tracking.
+                  Schedule appointments with your preferred doctors across
+                  multiple specialties. Auto-generated appointment IDs for easy
+                  tracking.
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -271,10 +339,12 @@ export default function HomePage() {
                 <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 mx-auto group-hover:bg-primary/20 transition-colors">
                   <Clock className="w-8 h-8 text-primary" />
                 </div>
-                <CardTitle className="text-xl font-[family-name:var(--font-heading)] mb-3">Real-time Updates</CardTitle>
+                <CardTitle className="text-xl font-[family-name:var(--font-heading)] mb-3">
+                  Real-time Updates
+                </CardTitle>
                 <CardDescription className="text-base leading-relaxed">
-                  Live appointment status, countdown timers, and instant notifications. Know exactly when your doctor is
-                  ready.
+                  Live appointment status, countdown timers, and instant
+                  notifications. Know exactly when your doctor is ready.
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -288,8 +358,8 @@ export default function HomePage() {
                   Interactive Clinic Locator
                 </CardTitle>
                 <CardDescription className="text-base leading-relaxed">
-                  Find nearby clinics with live availability, get directions, and check real-time wait times across our
-                  network.
+                  Find nearby clinics with live availability, get directions,
+                  and check real-time wait times across our network.
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -300,10 +370,13 @@ export default function HomePage() {
               <CardContent className="p-8">
                 <div className="flex items-center mb-4">
                   <Shield className="w-8 h-8 mr-3" />
-                  <h4 className="text-2xl font-bold font-[family-name:var(--font-heading)]">HIPAA Compliant</h4>
+                  <h4 className="text-2xl font-bold font-[family-name:var(--font-heading)]">
+                    HIPAA Compliant
+                  </h4>
                 </div>
                 <p className="text-lg opacity-90 mb-6">
-                  Your medical information is protected with enterprise-grade security and full HIPAA compliance.
+                  Your medical information is protected with enterprise-grade
+                  security and full HIPAA compliance.
                 </p>
                 <ul className="space-y-2">
                   <li className="flex items-center">
@@ -331,9 +404,13 @@ export default function HomePage() {
                   </h4>
                 </div>
                 <p className="text-lg text-muted-foreground mb-6">
-                  Access your complete medical history, test results, and communicate with your healthcare team.
+                  Access your complete medical history, test results, and
+                  communicate with your healthcare team.
                 </p>
-                <Button className="w-full min-h-[48px] text-lg" onClick={handlePatientPortal}>
+                <Button
+                  className="w-full min-h-[48px] text-lg"
+                  onClick={handlePatientPortal}
+                >
                   <Play className="w-5 h-5 mr-2" />
                   Take a Tour
                 </Button>
@@ -348,12 +425,20 @@ export default function HomePage() {
         <div className="container mx-auto text-center">
           <Card className="border-0 shadow-xl bg-primary text-primary-foreground max-w-4xl mx-auto">
             <CardContent className="py-12">
-              <h3 className="text-3xl font-bold mb-4 font-[family-name:var(--font-heading)]">Ready to Get Started?</h3>
+              <h3 className="text-3xl font-bold mb-4 font-[family-name:var(--font-heading)]">
+                Ready to Get Started?
+              </h3>
               <p className="text-lg mb-8 opacity-90">
-                Join thousands of patients who trust Alturos Health for their medical care.
+                Join thousands of patients who trust Alturos Health for their
+                medical care.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button variant="secondary" size="lg" className="text-lg px-8 py-6" onClick={handlePatientPortal}>
+                <Button
+                  variant="secondary"
+                  size="lg"
+                  className="text-lg px-8 py-6"
+                  onClick={handlePatientPortal}
+                >
                   <Users className="w-5 h-5 mr-2" />
                   Patient Portal
                 </Button>
@@ -381,23 +466,42 @@ export default function HomePage() {
                   <Heart className="w-6 h-6 text-primary-foreground" />
                 </div>
                 <div>
-                  <h4 className="text-xl font-bold font-[family-name:var(--font-heading)]">Alturos Health</h4>
-                  <p className="text-xs opacity-80">Trusted Healthcare Platform</p>
+                  <h4 className="text-xl font-bold font-[family-name:var(--font-heading)]">
+                    Alturos Health
+                  </h4>
+                  <p className="text-xs opacity-80">
+                    Trusted Healthcare Platform
+                  </p>
                 </div>
               </div>
               <p className="text-primary-foreground/80 leading-relaxed">
-                Professional telehealth and appointment management for modern medical practices. Your health, our
-                priority.
+                Professional telehealth and appointment management for modern
+                medical practices. Your health, our priority.
               </p>
             </div>
             <div>
-              <h5 className="font-semibold mb-4 font-[family-name:var(--font-heading)] text-lg">Services</h5>
+              <h5 className="font-semibold mb-4 font-[family-name:var(--font-heading)] text-lg">
+                Services
+              </h5>
               <ul className="space-y-3 text-primary-foreground/80">
-                <li className="hover:text-primary-foreground transition-colors cursor-pointer" onClick={handleFindDoctors}>
+                <li
+                  className="hover:text-primary-foreground transition-colors cursor-pointer"
+                  onClick={handleFindDoctors}
+                >
                   Telehealth Consultations
                 </li>
-                <li className="hover:text-primary-foreground transition-colors cursor-pointer" onClick={handleBookNow}>Appointment Booking</li>
-                <li className="hover:text-primary-foreground transition-colors cursor-pointer" onClick={handlePatientPortal}>Patient Portal</li>
+                <li
+                  className="hover:text-primary-foreground transition-colors cursor-pointer"
+                  onClick={handleBookNow}
+                >
+                  Appointment Booking
+                </li>
+                <li
+                  className="hover:text-primary-foreground transition-colors cursor-pointer"
+                  onClick={handlePatientPortal}
+                >
+                  Patient Portal
+                </li>
                 <li className="hover:text-primary-foreground transition-colors cursor-pointer">
                   Insurance Verification
                 </li>
@@ -407,23 +511,59 @@ export default function HomePage() {
               </ul>
             </div>
             <div>
-              <h5 className="font-semibold mb-4 font-[family-name:var(--font-heading)] text-lg">Company</h5>
+              <h5 className="font-semibold mb-4 font-[family-name:var(--font-heading)] text-lg">
+                Company
+              </h5>
               <ul className="space-y-3 text-primary-foreground/80">
-                <li className="hover:text-primary-foreground transition-colors cursor-pointer" onClick={() => router.push('/about')}>About Us</li>
-                <li className="hover:text-primary-foreground transition-colors cursor-pointer" onClick={() => router.push('/help')}>Help Center</li>
-                <li className="hover:text-primary-foreground transition-colors cursor-pointer" onClick={() => router.push('/contact')}>Contact Us</li>
+                <li
+                  className="hover:text-primary-foreground transition-colors cursor-pointer"
+                  onClick={() => router.push('/about')}
+                >
+                  About Us
+                </li>
+                <li
+                  className="hover:text-primary-foreground transition-colors cursor-pointer"
+                  onClick={() => router.push('/help')}
+                >
+                  Help Center
+                </li>
+                <li
+                  className="hover:text-primary-foreground transition-colors cursor-pointer"
+                  onClick={() => router.push('/contact')}
+                >
+                  Contact Us
+                </li>
               </ul>
             </div>
             <div>
-              <h5 className="font-semibold mb-4 font-[family-name:var(--font-heading)] text-lg">Legal</h5>
+              <h5 className="font-semibold mb-4 font-[family-name:var(--font-heading)] text-lg">
+                Legal
+              </h5>
               <ul className="space-y-3 text-primary-foreground/80">
-                <li className="hover:text-primary-foreground transition-colors cursor-pointer" onClick={() => router.push('/privacy')}>Privacy Policy</li>
-                <li className="hover:text-primary-foreground transition-colors cursor-pointer" onClick={() => router.push('/terms')}>Terms of Service</li>
-                <li className="hover:text-primary-foreground transition-colors cursor-pointer" onClick={() => router.push('/hipaa')}>HIPAA Notice</li>
+                <li
+                  className="hover:text-primary-foreground transition-colors cursor-pointer"
+                  onClick={() => router.push('/privacy')}
+                >
+                  Privacy Policy
+                </li>
+                <li
+                  className="hover:text-primary-foreground transition-colors cursor-pointer"
+                  onClick={() => router.push('/terms')}
+                >
+                  Terms of Service
+                </li>
+                <li
+                  className="hover:text-primary-foreground transition-colors cursor-pointer"
+                  onClick={() => router.push('/hipaa')}
+                >
+                  HIPAA Notice
+                </li>
               </ul>
             </div>
             <div>
-              <h5 className="font-semibold mb-4 font-[family-name:var(--font-heading)] text-lg">Emergency Contact</h5>
+              <h5 className="font-semibold mb-4 font-[family-name:var(--font-heading)] text-lg">
+                Emergency Contact
+              </h5>
               <div className="space-y-4">
                 <div className="bg-primary-foreground/10 rounded-lg p-4">
                   <p className="font-semibold text-lg">24/7 Emergency Line</p>
@@ -437,10 +577,13 @@ export default function HomePage() {
             </div>
           </div>
           <div className="border-t border-primary-foreground/20 pt-8 text-center text-primary-foreground/60">
-            <p>&copy; 2024 Alturos Health. All rights reserved. HIPAA Compliant Healthcare Platform.</p>
+            <p>
+              &copy; 2024 Alturos Health. All rights reserved. HIPAA Compliant
+              Healthcare Platform.
+            </p>
           </div>
         </div>
       </footer>
     </div>
-  )
+  );
 }

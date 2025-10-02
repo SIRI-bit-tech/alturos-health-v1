@@ -1,53 +1,60 @@
-"use client"
+'use client';
 
-import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Heart, Eye, EyeOff } from 'lucide-react'
-import { useAuth } from '@/hooks/use-auth'
-import { useEffect } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
-import Link from 'next/link'
+// import React from 'react';
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Heart, Eye, EyeOff } from 'lucide-react';
+import { useAuth } from '@/hooks/use-auth';
+import { useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 
 export default function LoginPage() {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [showPassword, setShowPassword] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState('')
-  
-  const { login, isAuthenticated, isLoading: authLoading } = useAuth()
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const redirect = searchParams.get('redirect') || '/dashboard'
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const { login, isAuthenticated, isLoading: authLoading } = useAuth();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get('redirect') || '/dashboard';
 
   // If already authenticated, send to dashboard immediately
   useEffect(() => {
     if (isAuthenticated) {
-      router.replace(redirect)
+      router.replace(redirect);
     }
-  }, [isAuthenticated, redirect, router])
+  }, [isAuthenticated, redirect, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-    setError('')
+    e.preventDefault();
+    setIsLoading(true);
+    setError('');
 
     try {
-      const result = await login({ username: username.trim(), password })
+      const result = await login({ username: username.trim(), password });
       if (result.success) {
-        router.replace(redirect)
+        router.replace(redirect);
       } else {
-        setError(result.error || 'Invalid username or password')
+        setError(result.error || 'Invalid username or password');
       }
     } catch (err) {
-      setError('An error occurred during login')
+      setError('An error occurred during login');
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5 flex items-center justify-center p-4">
@@ -71,11 +78,14 @@ export default function LoginPage() {
               Enter your credentials to access your account
             </CardDescription>
           </CardHeader>
-          
+
           <CardContent className="space-y-6">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="username" className="text-sm font-medium text-foreground">
+                <Label
+                  htmlFor="username"
+                  className="text-sm font-medium text-foreground"
+                >
                   Username or Email
                 </Label>
                 <Input
@@ -90,7 +100,10 @@ export default function LoginPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-sm font-medium text-foreground">
+                <Label
+                  htmlFor="password"
+                  className="text-sm font-medium text-foreground"
+                >
                   Password
                 </Label>
                 <div className="relative">
@@ -108,7 +121,11 @@ export default function LoginPage() {
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
                   >
-                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    {showPassword ? (
+                      <EyeOff className="w-5 h-5" />
+                    ) : (
+                      <Eye className="w-5 h-5" />
+                    )}
                   </button>
                 </div>
               </div>
@@ -131,13 +148,19 @@ export default function LoginPage() {
             <div className="text-center space-y-4">
               <div className="text-sm text-muted-foreground">
                 Don't have an account?{' '}
-                <Link href="/auth/register" className="text-primary hover:underline font-medium">
+                <Link
+                  href="/auth/register"
+                  className="text-primary hover:underline font-medium"
+                >
                   Sign up
                 </Link>
               </div>
-              
+
               <div className="text-sm text-muted-foreground">
-                <Link href="/auth/forgot-password" className="text-primary hover:underline">
+                <Link
+                  href="/auth/forgot-password"
+                  className="text-primary hover:underline"
+                >
                   Forgot your password?
                 </Link>
               </div>
@@ -152,5 +175,5 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
